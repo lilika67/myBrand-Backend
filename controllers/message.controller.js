@@ -13,10 +13,8 @@ const sendMessage = async (req, res) => {
       
     });
 
-    // Save the message to the database
+    
     const sentMessage = await newMessage.save();
-
-    // Respond with a success message and the saved message object
     return res.status(201).json({
       message: "Message sent successfully",
       sentMessage: sentMessage
@@ -26,6 +24,20 @@ const sendMessage = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
+
+  
 };
 
-module.exports = { sendMessage };
+const deleteAllMessages = async (req,res) =>{
+  try{
+    const deleteAll = await subscribeModel.findByIdAndDelete(req.param.id)
+    const remainingMessages = await subscribeModel.find();
+    return res.status(200).json({message:"message deleted successfully",remainingMessages});
+  }catch(error){
+    console.log(error)
+    return res.status(404).json({message:"Message  not found"});
+  }
+}
+
+
+module.exports = { sendMessage, deleteAllMessages };

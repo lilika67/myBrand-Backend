@@ -19,6 +19,11 @@ const blogSchema = new Schema({
       trim:true,
     
     },
+    image: {
+      type: String, 
+      required: true, 
+      trim:true
+    }
   
 });
 const BlogModel = model ('blog', blogSchema)

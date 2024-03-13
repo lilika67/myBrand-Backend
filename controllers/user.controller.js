@@ -19,6 +19,12 @@ const record  = async (req, res, next) => {
 const getUsers = async (req, res, next) => {
   try {
     var allUsers = await UserModel.find({});
+    if(!allUsers){
+      return res.status(404).json({
+        
+        message:"No users found!"
+      });
+    } else
     res.status(200).json({
       savedUser: allUsers
     });

@@ -60,6 +60,7 @@ const findById = async (req, res, next) => {
         res.status(400).json({message: "blog not found!"});
       }
     } catch (error) {
+      console.log(error);
       res.status(500).send(error);
     }
   }

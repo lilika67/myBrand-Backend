@@ -11,7 +11,7 @@ const sendEmail = require('../middlewares/sendEmail');
 require('dotenv').config()
 const SignUp = async (req, res, next) => {
      try {
-       const { firstName, lastName, email, password } = req.body;
+       const { firstName,lastName, email, password } = req.body;
 
        var userExists = await UserModel.findOne({ email: email });
        
