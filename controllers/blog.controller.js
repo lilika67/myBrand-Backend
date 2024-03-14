@@ -1,28 +1,58 @@
-
-const {BlogModel} = require('../models/blog.model');
+const { BlogModel } = require('../models/blog.model');
 const errorHandler = require('../errors/errorHandler');
-const { record } = require('./user.controller');
-const addBlog = async (req, res, next) =>{
-  try{
-    const {title,author} = req.body
-    let existBlog = await BlogModel.findOne({title:title,author:author});
+const multer = require('multer');
+const path = require('path');
 
-    if(existBlog){
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, "./database/uploads"); // Destination folder for storing uploaded files
+  },
+  filename: (req, file, callback) => {
+    const filename = `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`;
+    callback(null, filename); // Setting the filename for the uploaded file
+  }
+});
+
+// Multer upload configuration
+const upload = multer({ storage: storage });
+
+// Function to add a new blog
+const addBlog = async (req, res, next) => {
+  try {
+    // Extracting data from request body
+    const { title, description, author } = req.body;
+
+    // Check if image file is uploaded
+    let image = req.file ? req.file.filename : ""; // If image is uploaded, set image filename, otherwise empty string
+
+    // Check if blog with same title and author already exists
+    let existBlog = await BlogModel.findOne({ title: title, author: author });
+
+    if (existBlog) {
       return next(errorHandler(409, "This blog already exists and it can't be added twice"));
     } else {
-      var addedblog = await BlogModel.create(req.body);
-    res.status(201).json({
-      message: "Your blog was added successfully!",
-      blog: addedblog
-    });
+      // Create a new blog document in the database
+      const addedBlog = await BlogModel.create({
+        title: title,
+        description: description,
+        author: author,
+        image: image // Set the image filename for the blog
+      });
+
+      // Send response to the client
+      res.status(201).json({
+        message: "Your blog was added successfully!",
+        blog: addedBlog
+      });
     }
-    
-  } catch(error) {
+
+  } catch (error) {
     console.log(error);
     res.status(500).send(error);
-    
   }
-}
+};
+
 const listBlog = async (req, res, next) => {
   try{
     var allblogs = await BlogModel.find({});

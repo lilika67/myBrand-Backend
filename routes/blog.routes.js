@@ -1,16 +1,22 @@
 const express = require("express");
 const blogRouter = express.Router();
-const blogs = require('../models/blog.model');
+const { recordBlog, findById, deleteBlog, listBlog, updateBlog } = require("../controllers/blog.controller");
 const multer = require('multer');
-const {
-  recordBlog,
-  findById,
-  deleteBlog,
-  listBlog,
-  updateBlog,
-} = require("../controllers/blog.controller");
 
-// Swagger UI Implementation
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, "./database/uploads"); 
+  },
+  filename: (req, file, callback) => {
+    const filename = `${file.fieldname}_${Date.now()}${file.originalname.match(/\.[0-9a-z]+$/i)[0]}`;
+    callback(null, filename); 
+  }
+});
+
+// Multer upload configuration
+const upload = multer({ storage: storage });
+
 /**
  * @swagger
  * tags:
@@ -22,12 +28,12 @@ const {
  * @swagger
  * /api/v1/blogs:
  *   post:
- *     summary: Create a new blog
+ *     summary: Create a new blog 
  *     tags: [Blog]
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -37,6 +43,9 @@ const {
  *                 type: string
  *               description:
  *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Blog created successfully
@@ -45,7 +54,7 @@ const {
  *       500:
  *         description: Internal server error
  */
-blogRouter.post("/", recordBlog);
+blogRouter.post("/", upload.single('image'), recordBlog);
 
 /**
  * @swagger
@@ -146,16 +155,5 @@ blogRouter.put("/:id", updateBlog);
  *         description: Internal server error
  */
 blogRouter.delete("/:id", deleteBlog);
-
-const storage = multer.diskStorage({
-  destination:(req, file, callback) =>{
-    callback(null, "./database/uploads" )
-
-  },
-  filename: (req, file, callback) =>{
-    callback(null, file.originalname);
-  }
-});
-const uploads = multer({storage : storage});
 
 module.exports = blogRouter;

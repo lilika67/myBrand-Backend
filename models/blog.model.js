@@ -21,7 +21,7 @@ const blogSchema = new Schema({
     },
     image: {
       type: String, 
-      required: true, 
+      default: "default.png",
       trim:true
     }
   

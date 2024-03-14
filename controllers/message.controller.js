@@ -3,12 +3,14 @@ const  {messageModel}= require('../models/message.model');
 const sendMessage = async (req, res) => {
   try {
     // Extract necessary data from request body
-    const { fullName, message } = req.body;
+    const { fullName,email, message } = req.body;
 
     // Create a new message instance
     const newMessage = new messageModel({
       fullName: fullName,
+      email:email,
       message: message,
+      
       
       
     });
@@ -16,13 +18,13 @@ const sendMessage = async (req, res) => {
     
     const sentMessage = await newMessage.save();
     return res.status(201).json({
-      message: "Message sent successfully",
+      message: "Your Message has sent successfully",
       sentMessage: sentMessage
     });
   } catch (error) {
     // Handle errors
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error})
   }
 
   

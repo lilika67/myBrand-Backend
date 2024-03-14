@@ -36,7 +36,7 @@ const getUsers = async (req, res, next) => {
 
 const findById = async (req, res, next) => {
   try {
-    const userId = req.query.id;
+    const userId = req.params.id;
     const foundUser = await UserModel.findById(userId);
 
     if (foundUser) {
@@ -78,8 +78,8 @@ const remove = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    console.log(req.body, req.query.id);
-    var updatedUser = await UserModel.findByIdAndUpdate({ _id: req.query.id }, req.body);
+    console.log(req.body, req.params.id);
+    var updatedUser = await UserModel.findByIdAndUpdate({ _id: req.params.id }, req.body);
     if(updatedUser === null){
       return res.status(404).json({message: "User not found"}) 
     }

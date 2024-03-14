@@ -22,21 +22,6 @@ const {
  *   post:
  *     summary: Record a new user
  *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User recorded successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       500:
- *         description: Internal server error
  */
 userRouter.post("/", record);
 
@@ -48,7 +33,13 @@ userRouter.post("/", record);
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: List of all  
+ *         description: List of all users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
  *       500:
  *         description: Internal server error
  */
@@ -70,6 +61,12 @@ userRouter.get("/", getUsers);
  *     responses:
  *       200:
  *         description: User found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal server error
  */
@@ -95,7 +92,7 @@ userRouter.get("/:id", findById);
  *           schema:
  *             $ref: '#/components/schemas/User'
  *     responses:
- *       200:
+ *       201:
  *         description: User updated successfully
  *         content:
  *           application/json:
@@ -145,6 +142,10 @@ userRouter.delete("/:id", remove);
  *     responses:
  *       200:
  *         description: User found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       500:
  *         description: Internal server error
  */
