@@ -53,6 +53,8 @@ const addBlog = async (req, res, next) => {
   }
 };
 
+
+
 const listBlog = async (req, res, next) => {
   try{
     var allblogs = await BlogModel.find({});

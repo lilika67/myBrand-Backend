@@ -26,7 +26,14 @@ const UserSchema = new Schema({
         enum: ["visitor","admin"],
         default: "visitor"
 
-    }
+    },
+
+    createdAt: {
+        type: Date, 
+        required: false, 
+        default:new Date(),
+    
+    },
    
 } );
 

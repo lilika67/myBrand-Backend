@@ -25,8 +25,8 @@ const getUsers = async (req, res, next) => {
         message:"No users found!"
       });
     } else
-    res.status(200).json({
-      savedUser: allUsers
+    res.status(200).send({
+      allUsers
     });
   } catch (error) {
     console.log(error)

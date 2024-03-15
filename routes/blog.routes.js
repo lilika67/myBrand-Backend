@@ -6,11 +6,11 @@ const multer = require('multer');
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "./database/uploads"); 
+    callback(null, "./database/uploads"); // Destination folder for storing uploaded files
   },
   filename: (req, file, callback) => {
     const filename = `${file.fieldname}_${Date.now()}${file.originalname.match(/\.[0-9a-z]+$/i)[0]}`;
-    callback(null, filename); 
+    callback(null, filename); // Setting the filename for the uploaded file
   }
 });
 
@@ -28,7 +28,7 @@ const upload = multer({ storage: storage });
  * @swagger
  * /api/v1/blogs:
  *   post:
- *     summary: Create a new blog 
+ *     summary: Create a new blog with image
  *     tags: [Blog]
  *     requestBody:
  *       required: true
