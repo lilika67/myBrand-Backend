@@ -1,6 +1,23 @@
 const  {messageModel}= require('../models/message.model');
 
-const sendMessage = async (req, res) => {
+const getMessages = async(req,res)=>{
+  try{
+    const allMessages = await messageModel.find({});
+    if(!allMessages){
+      return res.status(404).json({
+        message:"No messages found!"
+      });
+    } else
+    return res.status(201).json({
+      message: "These are my messages",
+      allMessages
+    });
+  }catch(error){
+    console.log(error);
+    return res.status(500).json(error)
+  }
+}
+const sendMessage= async (req, res) => {
   try {
     // Extract necessary data from request body
     const { fullName,email, message } = req.body;
@@ -18,7 +35,7 @@ const sendMessage = async (req, res) => {
     
     const sentMessage = await newMessage.save();
     return res.status(201).json({
-      message: "Your Message has sent successfully",
+      message: "Your Message has beensent successfully",
       sentMessage: sentMessage
     });
   } catch (error) {
@@ -42,4 +59,4 @@ const deleteAllMessages = async (req,res) =>{
 }
 
 
-module.exports = { sendMessage, deleteAllMessages };
+module.exports = { sendMessage, deleteAllMessages, getMessages};

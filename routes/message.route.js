@@ -1,6 +1,6 @@
 const express = require('express');
 const messageRouter = express.Router();
-const {sendMessage, deleteAllMessages}  = require('../controllers/message.controller');
+const {sendMessage, deleteAllMessages, getMessages}  = require('../controllers/message.controller');
 
 messageRouter.post('/', sendMessage);
 
@@ -89,6 +89,7 @@ messageRouter.post('/', sendMessage);
  * 
  */
 messageRouter.delete('/', deleteAllMessages);
+messageRouter.get('/', getMessages)
 
 module.exports = messageRouter;
 
