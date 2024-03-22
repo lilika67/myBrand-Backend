@@ -16,29 +16,6 @@ const {
  *   description: User management endpoints
  */
 
-/**
- * @swagger
- * /api/v1/users:
- *   post:
- *     summary: Record a new user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       '201':
- *         description: User recorded successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       '500':
- *         description: Internal server error
- */
-userRouter.post("/", record);
 
 /**
  * @swagger

@@ -32,6 +32,10 @@ const swaggerOptions = {
         url: "http://localhost:4000",
         description: "Node.js Server",
       },
+      {
+        url: "https://mybrand-backend-prst.onrender.com/",
+        description: "swagger",
+      },
     ],
   },
   apis: [

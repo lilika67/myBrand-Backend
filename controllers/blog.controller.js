@@ -53,33 +53,26 @@ const addBlog = async (req, res, next) => {
 };
 
 //function to add a comment to the blog
-const addComment = async(req,res,next)=>{
-  try{
-    const {comment} = req.body;
-    console.log(comment);
-    const blogId = req.params.id;
-    console.log(blogId);
-    const blog = await BlogModel.findById(blogId);
-    console.log(blog);
-
-    if(!blog){
-      return res.status(404).json({message: "Blog not found"});
+const addComment = async (req, res) => {
+  try {
+    
+    const {author,content} = req.body;
+    const blogComment = await BlogModel.findById(req.params.id);
+    if (!blogComment) {
+      return res.status(404).json({ error: "Blog not found" });
     }
 
-    blog.comments.push(comment);
-    await blog.save();
+    const newComment = { author, content };
+    blogComment.comments.push(newComment);
+    await blogComment.save();
 
-    res.status(201).json({
-      message: "Your comment was added successfully!",
-      blog: blog
-    });
-
-  }catch(e){
-      console.log(e);
+    res
+      .status(201)
+      .json({ message: "Comment added to blog", comment: newComment });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-}
-//function to like a blog
-
+};
 
 
 

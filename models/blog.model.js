@@ -31,16 +31,13 @@ const blogSchema = new Schema({
     default: "default.png",
     trim: true
   },
-  comments: [{
-    text: {
-      type: String,
-      required: true
+  comments: [
+    {
+      author: String,
+      content: String,
+      date: { type: Date, default: Date.now },
     },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
+  ],
   likes: {
     type: Number,
     default: 0
