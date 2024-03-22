@@ -14,7 +14,7 @@ const _dirname = path.resolve();
 
 // Use CORS middleware
 app.use(cors({ origin: "*" }));
-app.use('/uploads', express.static('upload'));
+app.use('/uploads', express.static('./database/uploads'));
 
 // Middleware to parse JSON bodies
 app.use(express.json());

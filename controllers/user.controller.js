@@ -63,15 +63,17 @@ const findByEmail = async (req, res, next) => {
   }
 };
 
-const remove = async (req, res, next) => {
+const remove = async (req, res) => {
   try {
-    var deletedUser = await UserModel.findByIdAndDelete(req.query.id);
+    let singleId = req.params.id;
+    var deletedUser = await UserModel.findByIdAndDelete(singleId);
     if (deletedUser) {
       res.status(200).json({ message: "User deleted successfully!" });
     } else {
       res.status(409).json({ message: "User not found!" });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };

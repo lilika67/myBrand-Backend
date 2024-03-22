@@ -22,6 +22,21 @@ const {
  *   post:
  *     summary: Record a new user
  *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
+ *     responses:
+ *       '201':
+ *         description: User recorded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '500':
+ *         description: Internal server error
  */
 userRouter.post("/", record);
 
@@ -32,15 +47,11 @@ userRouter.post("/", record);
  *     summary: Get all users
  *     tags: [Users]
  *     responses:
- *       200:
+ *       '200':
  *         description: List of all users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
- *       500:
+ *       '404':
+ *         description: No users found
+ *       '500':
  *         description: Internal server error
  */
 userRouter.get("/", getUsers);
@@ -59,50 +70,15 @@ userRouter.get("/", getUsers);
  *           type: string
  *         description: User ID
  *     responses:
- *       200:
- *         description: User found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       404:
+ *       '200':
+ *         description: Success
+ *       '404':
  *         description: User not found
- *       500:
+ *       '500':
  *         description: Internal server error
  */
 userRouter.get("/:id", findById);
 
-/**
- * @swagger
- * /api/v1/users/{id}:
- *   put:
- *     summary: Update a user by ID
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: User ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal server error
- */
 userRouter.put("/:id", update);
 
 /**
@@ -119,11 +95,11 @@ userRouter.put("/:id", update);
  *           type: string
  *         description: User ID
  *     responses:
- *       200:
+ *       '200':
  *         description: User deleted successfully
- *       409:
+ *       '409':
  *         description: User not found
- *       500:
+ *       '500':
  *         description: Internal server error
  */
 userRouter.delete("/:id", remove);
@@ -140,13 +116,10 @@ userRouter.delete("/:id", remove);
  *         required: true
  *         description: User email
  *     responses:
- *       200:
- *         description: User found
+ *       '200':
+ *         description: Success
  *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       500:
+ *       '500':
  *         description: Internal server error
  */
 userRouter.get("/email/:email", findByEmail);

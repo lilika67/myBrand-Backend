@@ -59,8 +59,8 @@ const SignIn = async (req, res, next) => {
         res
             .cookie('access_token', token, { httpOnly: true, expires: expiryDate})
             .status(200)
-            .json({message: "you signedIn Successfully"});
-
+            .json({message: "you signedIn Successfully", user:validUser});
+        console.log(validUser);
     } catch (error) {
         
         res.status(500).send(error.message);

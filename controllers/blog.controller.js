@@ -20,27 +20,26 @@ const upload = multer({ storage: storage });
 // Function to add a new blog
 const addBlog = async (req, res, next) => {
   try {
-    // Extracting data from request body
-    const { title, description, author } = req.body;
+    const { title, introduction,description, author } = req.body;
 
-    // Check if image file is uploaded
-    let image = req.file ? req.file.filename : ""; // If image is uploaded, set image filename, otherwise empty string
+    let image = req.file ? req.file.filename : "";
 
-    // Check if blog with same title and author already exists
     let existBlog = await BlogModel.findOne({ title: title, author: author });
 
     if (existBlog) {
       return next(errorHandler(409, "This blog already exists and it can't be added twice"));
     } else {
-      // Create a new blog document in the database
+      
       const addedBlog = await BlogModel.create({
         title: title,
+        introduction: introduction,
         description: description,
         author: author,
-        image: image // Set the image filename for the blog
+        image: image,
+        comments: [],
+        likes: 0
       });
 
-      // Send response to the client
       res.status(201).json({
         message: "Your blog was added successfully!",
         blog: addedBlog
@@ -53,13 +52,42 @@ const addBlog = async (req, res, next) => {
   }
 };
 
+//function to add a comment to the blog
+const addComment = async(req,res,next)=>{
+  try{
+    const {comment} = req.body;
+    console.log(comment);
+    const blogId = req.params.id;
+    console.log(blogId);
+    const blog = await BlogModel.findById(blogId);
+    console.log(blog);
+
+    if(!blog){
+      return res.status(404).json({message: "Blog not found"});
+    }
+
+    blog.comments.push(comment);
+    await blog.save();
+
+    res.status(201).json({
+      message: "Your comment was added successfully!",
+      blog: blog
+    });
+
+  }catch(e){
+      console.log(e);
+  }
+}
+//function to like a blog
+
+
 
 
 const listBlog = async (req, res, next) => {
   try{
     var allblogs = await BlogModel.find({});
     res.status(200).json({
-      users: allblogs
+      allblogs
     });
   } catch (error) {
     console.log(error)
@@ -98,29 +126,30 @@ const findById = async (req, res, next) => {
   }
   const updateBlog = async (req, res, next) => {
     try {
-        console.log(req.body, req.params.id);
-        const blogz = await BlogModel.findById(req.params.id)
-        console.log(blogz);
-        
-        var updatedblog = await BlogModel.findByIdAndUpdate({_id:req.params.id},req.body);
-        if(updatedblog === null){
-          return res.status(404).json({message:"blog not found"})
-        }
-        var blog = await BlogModel.find(updatedblog._id);
-        res.status(200).json({
-        message:'your blog was updated successfully',
+      
+      const blog = await BlogModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  
+      if (!blog) {
+        return res.status(404).json({ message: "Blog not found" });
+      }
+  
+      res.status(200).json({
+        message: "Your blog was updated successfully",
         blog
-        })
+      });
     } catch (error) {
-        console.log(error)
-        res.status(500).send(error.message);
+      console.error(error);
+      res.status(500).json({ message: "An error occurred while updating the blog" });
     }
+   
 };
+
 
 module.exports = {
   findById, 
   listBlog, 
   deleteBlog,
   recordBlog: addBlog, 
-  updateBlog
+  updateBlog,
+  addComment
 }

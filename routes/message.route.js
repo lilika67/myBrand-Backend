@@ -1,6 +1,6 @@
 const express = require('express');
 const messageRouter = express.Router();
-const {sendMessage, deleteAllMessages, getMessages}  = require('../controllers/message.controller');
+const {sendMessage, deleteMessages, getMessages}  = require('../controllers/message.controller');
 
 messageRouter.post('/', sendMessage);
 
@@ -13,6 +13,20 @@ module.exports = messageRouter;
  *   name: Messages
  *   description: Message management endpoints
  */
+
+/**
+ * @swagger
+ * /api/v1/messages:
+ *   get:
+ *     summary: Get all messages
+ *     tags: [Messages]
+ *     responses:
+ *       '200':
+ *         description: List of all messages
+ *       '500':
+ *         description: Internal server error
+ */
+messageRouter.get('/', getMessages)
 
 /**
  * @swagger
@@ -33,19 +47,14 @@ module.exports = messageRouter;
  *               message:
  *                 type: string
  *                 description: The message content
+ *               email:
+ *                 type: string
+ *                 description: The email content
  *     responses:
  *       201:
- *         description: Message sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
  *                 message:
  *                   type: string
  *                   description: Success message
- *                 sentMessage:
- *                   $ref: '#/components/schemas/Message'
  *       500:
  *         description: Internal server error
  */
@@ -54,42 +63,32 @@ module.exports = messageRouter;
 messageRouter.post('/', sendMessage);
 /**
  * @swagger
- * /api/v1/messages:
- *   post:
- *     summary: delete a message
+ * /api/v1/messages/{id}:
+ *   delete:
+ *     summary: Delete a message by ID
  *     tags: [Messages]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               fullName:
- *                 type: string
- *                 description: The full name of the sender
- *               message:
- *                 type: string
- *                 description: The message content
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the message to delete
  *     responses:
- *       201:
- *         description: Message sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
+ *       '200':
  *               properties:
  *                 message:
  *                   type: string
  *                   description: Success message
- *                 sentMessage:
- *                   $ref: '#/components/schemas/Message'
- *       500:
+ *       '404':
+ *         description: Message not found
+ *       '500':
  *         description: Internal server error
- * 
  */
-messageRouter.delete('/', deleteAllMessages);
-messageRouter.get('/', getMessages)
+
+
+messageRouter.delete('/:id', deleteMessages);
+
 
 module.exports = messageRouter;
 

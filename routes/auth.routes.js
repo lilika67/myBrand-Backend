@@ -2,7 +2,6 @@ const express = require("express");
 const {
   SignIn,
   SignUp,
-  ForgotPassword,
 } = require("../controllers/auth.controller");
 const authRoute = express.Router();
 
@@ -86,32 +85,5 @@ authRoute.post("/signin", SignIn);
  */
 authRoute.post("/signup", SignUp);
 
-/**
- * @swagger
- * /api/v1/auth/password:
- *   post:
- *     summary: Request password reset
- *     tags: [User] 
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email
- *             required:
- *               - email
- *     responses:
- *       '200':
- *         description: Password reset link sent to email
- *       '401':
- *         description: Invalid email
- *       '500':
- *         description: Internal server error
- */
-authRoute.post("/password", ForgotPassword);
 
 module.exports = authRoute;

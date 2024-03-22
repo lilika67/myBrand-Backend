@@ -1,6 +1,6 @@
 const express = require("express");
 const blogRouter = express.Router();
-const { recordBlog, findById, deleteBlog, listBlog, updateBlog } = require("../controllers/blog.controller");
+const { recordBlog, findById, deleteBlog, listBlog, updateBlog, addComment } = require("../controllers/blog.controller");
 const multer = require('multer');
 
 // Multer storage configuration
@@ -40,6 +40,8 @@ const upload = multer({ storage: storage });
  *               title:
  *                 type: string
  *               author:
+ *                 type: string
+ *               introduction:
  *                 type: string
  *               description:
  *                 type: string
@@ -85,11 +87,7 @@ blogRouter.get("/", listBlog);
  *         description: Blog ID
  *     responses:
  *       200:
- *         description: Blog found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Blog' 
+ *         description: Blog found 
  *       404:
  *         description: Blog not found
  *       500:
@@ -155,5 +153,7 @@ blogRouter.put("/:id", updateBlog);
  *         description: Internal server error
  */
 blogRouter.delete("/:id", deleteBlog);
+blogRouter.post("/:id", addComment)
+
 
 module.exports = blogRouter;

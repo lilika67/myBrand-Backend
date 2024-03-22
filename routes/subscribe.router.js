@@ -35,8 +35,6 @@ const { subscribedUser, getSubscribers, deleteAllSubscribers } = require('../con
  *                   type: string
  *                   description: Success message.
  *                   example: Thank you for your subscription
- *                 savedSubscriber:
- *                   $ref: '#/components/schemas/Subscriber'
  *       500:
  *         description: Internal Server Error
  */
@@ -63,10 +61,17 @@ subscribeRouter.get('/', getSubscribers);
 
 /**
  * @swagger
- * /api/v1/subscribers:
+ * /api/v1/subscribers/{id}:
  *   delete:
  *     summary: Delete all subscribers
  *     tags: [subscribe]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the subscriber to delete
  *     description: Endpoint to delete all subscribers.
  *     responses:
  *       200:
@@ -90,6 +95,6 @@ subscribeRouter.get('/', getSubscribers);
  *         description: Internal Server Error
  */
 
-subscribeRouter.delete('/', deleteAllSubscribers);
+subscribeRouter.delete('/:id', deleteAllSubscribers);
 
 module.exports = subscribeRouter;

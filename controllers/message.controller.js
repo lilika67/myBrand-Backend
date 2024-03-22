@@ -35,7 +35,7 @@ const sendMessage= async (req, res) => {
     
     const sentMessage = await newMessage.save();
     return res.status(201).json({
-      message: "Your Message has beensent successfully",
+      message: "Your Message has been sent successfully",
       sentMessage: sentMessage
     });
   } catch (error) {
@@ -47,16 +47,18 @@ const sendMessage= async (req, res) => {
   
 };
 
-const deleteAllMessages = async (req,res) =>{
-  try{
-    const deleteAll = await subscribeModel.findByIdAndDelete(req.param.id)
-    const remainingMessages = await subscribeModel.find();
-    return res.status(200).json({message:"message deleted successfully",remainingMessages});
-  }catch(error){
-    console.log(error)
-    return res.status(404).json({message:"Message  not found"});
+const deleteMessages = async (req, res) => {
+  try {
+    let messageId = req.params.id;
+    var deleteAll = await messageModel.findByIdAndDelete(messageId);
+    if (!deleteAll) {
+      return res.status(404).json({ message: "Message not found" });
+    } else {
+      return res.status(200).json({ message: "Message deleted successfully" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
 }
-
-
-module.exports = { sendMessage, deleteAllMessages, getMessages};
+module.exports = { sendMessage, deleteMessages, getMessages};

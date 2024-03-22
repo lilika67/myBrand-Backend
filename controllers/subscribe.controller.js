@@ -40,9 +40,10 @@ const getSubscribers = async(req,res)=>{
 //delete all subscribers
 const deleteAllSubscribers = async (req,res) =>{
   try{
-    const deleteAll = await subscribeModel.findByIdAndDelete(req.param.id)
-    const remainingSubscribers = await subscribeModel.find();
-    return res.status(200).json({message:"subscriber deleted successfully",remainingSubscribers});
+    const deleteAll = await subscribeModel.findByIdAndDelete(req.query.id)
+    if(deleteAll){
+      return res.status(200).json({message:"subscriber deleted successfully"});
+  }
   }catch(error){
     console.log(error)
     return res.status(404).json({message:"Subscriber not found"});
