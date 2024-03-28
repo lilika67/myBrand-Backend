@@ -1,6 +1,6 @@
 const express = require("express");
 const blogRouter = express.Router();
-const { recordBlog, findById, deleteBlog, listBlog, updateBlog, addComment } = require("../controllers/blog.controller");
+const { recordBlog, findById, deleteBlog, listBlog, updateBlog, addComment ,getComments, likeBlog, getLikes} = require("../controllers/blog.controller");
 const multer = require('multer');
 
 // Multer storage configuration
@@ -153,7 +153,10 @@ blogRouter.put("/:id", updateBlog);
  *         description: Internal server error
  */
 blogRouter.delete("/:id", deleteBlog);
-blogRouter.post("/:id", addComment)
+blogRouter.post("/:id", addComment);
+blogRouter.get("/comments/:id", getComments);
+blogRouter.post("/likes/:id",likeBlog);
+blogRouter.get("/getlikes/:id", getLikes);
 
 
 module.exports = blogRouter;

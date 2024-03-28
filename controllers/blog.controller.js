@@ -2,6 +2,7 @@ const { BlogModel } = require('../models/blog.model');
 const errorHandler = require('../errors/errorHandler');
 const multer = require('multer');
 const path = require('path');
+const mongoose = require('mongoose');
 
 // Multer storage configuration
 const storage = multer.diskStorage({
@@ -10,7 +11,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     const filename = `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`;
-    callback(null, filename); // Setting the filename for the uploaded file
+    callback(null, filename); 
   }
 });
 
@@ -55,24 +56,101 @@ const addBlog = async (req, res, next) => {
 //function to add a comment to the blog
 const addComment = async (req, res) => {
   try {
+     const { author, comment } = req.body;
     
-    const {author,content} = req.body;
-    const blogComment = await BlogModel.findById(req.params.id);
-    if (!blogComment) {
+    const blogId = req.params.id;
+    
+    if (!blogId) {
       return res.status(404).json({ error: "Blog not found" });
     }
 
-    const newComment = { author, content };
-    blogComment.comments.push(newComment);
-    await blogComment.save();
+    const ObjectId = mongoose.Types.ObjectId;
+    const blogObjId = new ObjectId(blogId);
+    const comments = {
+      author:author,comment:comment}
 
-    res
-      .status(201)
-      .json({ message: "Comment added to blog", comment: newComment });
+      const updateBlog = await BlogModel.findOneAndUpdate({_id: blogObjId},{
+        $push: {comments:comments}
+      },{
+        new: true,
+        
+      })
+   res.status(201).json({ message: "Comment added to blog", comments: updateBlog });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    console.log(err);
   }
 };
+
+//funcion to getBlog comments
+const getComments = async (req, res) => {
+  try {
+    const blogId = req.params.id;
+
+    const blog = await BlogModel.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    const comments = blog.comments;
+
+    res.json({ comments: comments });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+//function to like a blog
+
+const likeBlog = async (req, res) => {
+  try {
+    const { likes } = req.body;
+
+    const singleBlog = await BlogModel.findOne({ _id: req.params.id });
+
+    
+    if (singleBlog) {
+      
+      singleBlog.likes += 1;
+      
+      
+      const updatedBlog = await singleBlog.save();
+
+    
+      res.status(201).json({ message: "Like added to the blog", likes: updatedBlog.likes });
+    } else {
+      
+      res.status(404).json({ message: "Blog post not found" });
+    }
+  } catch (err) {
+    
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getLikes = async (req, res) => {
+  try {
+    const blogId = req.params.id;
+
+    const blog = await BlogModel.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    const likes = blog.likes;
+
+    res.json({ likes: likes });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+
 
 
 
@@ -131,7 +209,7 @@ const findById = async (req, res, next) => {
         blog
       });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       res.status(500).json({ message: "An error occurred while updating the blog" });
     }
    
@@ -144,5 +222,10 @@ module.exports = {
   deleteBlog,
   recordBlog: addBlog, 
   updateBlog,
-  addComment
+  addComment,
+  getComments,
+  likeBlog,
+  getLikes
+  
+  
 }

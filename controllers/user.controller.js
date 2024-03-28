@@ -78,7 +78,7 @@ const remove = async (req, res) => {
   }
 };
 
-const update = async (req, res, next) => {
+const update = async (req, res) => {
   try {
     console.log(req.body, req.params.id);
     var updatedUser = await UserModel.findByIdAndUpdate({ _id: req.params.id }, req.body);

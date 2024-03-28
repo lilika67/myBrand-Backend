@@ -33,7 +33,7 @@ const swaggerOptions = {
         description: "Node.js Server",
       },
       {
-        url: "https://mybrand-backend-prst.onrender.com/",
+        url: "https://mybrand-backend-v82m.onrender.com",
         description: "swagger",
       },
     ],
